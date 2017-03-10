@@ -98,7 +98,7 @@ dataframe = script.setupAndRun('Yatsunenko', X, y, 2)
 #run on HMP studies
 X, y = parse.parse_dataset_X(HMPMeta, HMPBiom, False)
 dataframe = script.setupAndRun('HMP', X, y, 2)
-dataframe.to_csv("accuracytable" + str(datetime.now()) + ".csv", sep='\t');
+dataframe.to_csv("accuracytable" + str(datetime.now()) + ".csv");
 #end of HMP
 
 
