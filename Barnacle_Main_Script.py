@@ -33,6 +33,7 @@ import pandas as pd
 from imp import reload
 import Parsing_Dataset as parse #MAKE SURE YOU DOWNLOAD THIS FROM GIT REPO
 import Classifiers_Accuracies_Script as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
+from datetime import datetime
 
 
 # In[8]:
@@ -55,7 +56,7 @@ files = {
 
 #Turnbaugh
 files['turnbaugh']['meta'] = path + "merged_bmi_mapping_final__original_study_Turnbaugh_mz_dz_twins__.txt"
-files['turnbaugh']['biom'] ="/home/barbarahe/Downloads/filtered_otu_table__original_study_Turnbaugh_mz_dz_twins__.biom"
+files['turnbaugh']['biom'] = path + "filtered_otu_table__original_study_Turnbaugh_mz_dz_twins__.biom"
 
 #Wu dataset
 files['wu']['meta'] = path + "merged_bmi_mapping_final__original_study_COMBO_Wu__.txt"
@@ -85,7 +86,9 @@ for study in files:
     #print(files[study]['biom'])
     X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], False)
     dataframe = script.setupAndRun(study, X, y, 2)
-    dataframe
+    if(study == 'HMP'):
+	dataframe.to_csv("accuracytable" + str(datetime.now()) + ".csv");
+	
     
 #finished all studies
 
