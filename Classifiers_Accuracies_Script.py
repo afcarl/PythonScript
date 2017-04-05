@@ -76,7 +76,13 @@ def setupAndRun(dataset_name, X, y, num_iterations):
         arr[5]['n_estimators'] += 500
         #increment learning_rate
         arr[7]['learning_rate'] += 1.0
-        
+
+    #reset
+    arr[0]['n_neighbors'] = 2
+    arr[7]['n_estimators'] = 1000
+    arr[6]['hidden_layer_sizes'] = 150
+    arr[5]['n_estimators'] = 1000
+    arr[7]['learning_rate'] = 1.0    
         
     return df
 
