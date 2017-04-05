@@ -26,8 +26,7 @@
 #PBS -N runAlgs
 
 ### Run in the queue named "batch"
-#PBS -q batch
-
+###PBS -q route
 ### Use the bourne shell
 #PBS -S /bin/sh
 
@@ -45,13 +44,13 @@
 
 ### Specify the number of cpus for your job.  This example will allocate 4 cores
 ### using 2 processors on each of 2 nodes.
-#PBS -l nodes=2:ppn=2
+#PBS -l nodes=1:ppn=1
 
 ### Tell PBS how much memory you expect to use. Use units of 'b','kb', 'mb' or 'gb'.
-#PBS -l mem=1gb
+#PBS -l mem=3gb
 
 ### Tell PBS the anticipated run-time for your job, where walltime=HH:MM:SS
-#PBS -l walltime=10:00:00
+#PBS -l walltime=24:00:00
 
 ### Switch to the working directory; by default TORQUE launches processes
 ### from your home directory.
@@ -77,6 +76,3 @@ echo Using ${NPROCS} processors across ${NNODES} nodes
 ### Or, just run your serial program
 module load python_2.7.3
 python Barnacle_Main_Script.py
-
-
-
