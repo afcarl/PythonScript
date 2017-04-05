@@ -1,4 +1,4 @@
-
+#Shweta Kinger 3/31/17
 # coding: utf-8
 
 # In[1]:
@@ -16,13 +16,6 @@
 
 #In order to run this file, you must also download Parsing_Dataset and CLassifiers_Accuracies_Script (from git repo)
 
-
-# In[2]:
-
-get_ipython().magic('load_ext autoreload')
-get_ipython().magic('autoreload 2')
-
-
 # In[3]:
 
 #import statements
@@ -30,11 +23,13 @@ import biom
 import sklearn
 import pandas as pd
 #import nbimporter # not sure if need to download
-from imp import reload
+#from imp import reload
 import Parsing_Dataset as parse #MAKE SURE YOU DOWNLOAD THIS FROM GIT REPO
 import Classifiers_Accuracies_Script as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
 from datetime import datetime
 
+#reload(parse)
+#reload(script)
 
 # In[8]:
 
@@ -74,7 +69,6 @@ files['yatsunenko']['biom'] = path + "filtered_otu_table__original_study_Yatsune
 files['HMP']['meta'] = path + "merged_bmi_mapping_final__original_study_HMP__.txt"
 files['HMP']['biom'] = path + "filtered_otu_table__original_study_HMP__.biom"
 
-files
 
 
 # In[10]:
@@ -82,16 +76,15 @@ files
 #run on each study
 
 for study in files:
-    #print(files[study]['meta'])
-    #print(files[study]['biom'])
-    X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], False)
-    dataframe = script.setupAndRun(study, X, y, 2)
-    if(study == 'HMP'):
-	dataframe.to_csv("accuracytable" + str(datetime.now()) + ".csv");
+    isAmish = False
+    if(study == 'amish'):
+	isAmish = True
+    X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], isAmish)
+    dataframe = script.setupAndRun(study, X, y, 3)
 	
     
 #finished all studies
-
+dataframe.to_csv('accuracytable' + str(datetime.now()) + '.csv')
 
 # In[8]:
 
