@@ -34,7 +34,8 @@ paramsDecisionTrees = {
 }
 paramsNB = {}
 paramsSVM = {
-    'C':[1,2]
+    'C':[1,2],
+    'kernel':['rbf', 'linear']
 }
 paramsGaussian = {}
 paramsRandomForest = {
@@ -81,14 +82,14 @@ def gridSearch(dataset_name, X, y, num_iterations):
     for i in range(1, num_iterations):
         name = dataset_name + str(i)
         models['KNN'] = KNeighborsClassifier()
-        models['Decision Tree'] = DecisionTreeClassifier()
+        models['Decision Tree'] = DecisionTreeClassifier(random_state=1)
         models['Naive Bayes'] = GaussianNB()
-        models['SVM'] = SVC()
-        models['Gaussian Process'] = GaussianProcessClassifier()
-        models['Random Forest'] = RandomForestClassifier()
-        models['Neural Net'] = MLPClassifier()
-        models['AdaBoost'] = AdaBoostClassifier() 
-        models['Extra Trees Classifier'] = ExtraTreesClassifier()
+        models['SVM'] = SVC(random_state=1)
+        models['Gaussian Process'] = GaussianProcessClassifier(random_state=1)
+        models['Random Forest'] = RandomForestClassifier(random_state=1)
+        models['Neural Net'] = MLPClassifier(random_state=1)
+        models['AdaBoost'] = AdaBoostClassifier(random_state=1) 
+        models['Extra Trees Classifier'] = ExtraTreesClassifier(random_state=1)
         run_dataset(name, X, y, models, algs) 
                       
     return df
@@ -113,10 +114,10 @@ def run_dataset(dataset_name, X, y, models, algs):
         print(clf.best_params_)
         print('\n')	
         #best_params = clf.best_estimator_.get_params()
-            
+        clf = clf.best_estimator_ 
         # append mean of best score
-        #accuracy_list.append(cross_val_score(clf, X, y, cv=10, scoring='roc_auc').mean())
-        accuracy_list.append(clf.best_score_)        
+        accuracy_list.append(cross_val_score(clf, X, y, cv=10, scoring='roc_auc').mean())
+        #accuracy_list.append(clf.best_score_)        
 
     se = pd.Series(accuracy_list)
     df[dataset_name] = se.values
