@@ -25,24 +25,24 @@ paramsKNN = {
     'n_neighbors':[2,5,10]
 }
 paramsDecisionTrees = {
-    'splitter':['best'],
     'criterion':['gini', 'entropy'],
-    'min_samples_leaf':[3,4,5,6,7,8],
-    'max_features': ['sqrt'],
-    'max_depth':[3,4,5],
-    'min_samples_split':[2,3,4,5]    
+    'max_depth':[3,4,5,10,20],
+    'min_samples_split': [2,3,4,5,6,10,15],
+    'min_samples_leaf':[3,4,5,6,7,8,10,15],
+    'max_features':['sqrt', 'log2'],   
 }
 paramsNB = {}
 paramsSVM = {
-    'C':[1,2],
+    'C':[1,2, 10, 100],
     'kernel':['rbf', 'linear']
 }
 paramsGaussian = {}
 paramsRandomForest = {
-    'max_depth': [2,3,4,5],
-    'min_samples_split': [2,3,5,6],
-    'min_samples_leaf':[2,4,5],
-    'n_estimators': [1500,1800]
+    'n_estimators': [20, 50, 100, 500, 1000, 1500, 1800, 2000],
+    'max_depth':[2,3,4,5,10,100,200,1000],
+    'min_samples_split':[2,3,5,6,10,15],
+    'min_samples_leaf':[2,4,5,6,8,10,15],
+    'max_features':['sqrt', 'log2']
 }
 
 # finish parameter values
@@ -50,8 +50,18 @@ paramsNeuralNet = {
   'hidden_layer_sizes':[(140,), (210,), (250,)],
   'solver':['lbfgs', 'adam']
 }
-paramsAdaboost = {}
-paramsExtraTrees = {}
+paramsAdaboost = {
+  'learning_rate': [1,2,3,5,10],
+  'n_estimators': [15,20,30,50,100,500,1000],
+  'base_estimator':[DecisionTreeClassifier(), RandomForestClassifier()]
+}
+paramsExtraTrees = {
+    'n_estimators':[20,50,100,200,500,1000, 2000],
+    'max_depth':[None, 20, 50, 100],
+    'min_samples_split':[2,3,5,6,8,10,15],
+    'min_samples_leaf': [1,2,3,4,5,6,10,15],
+    'max_features':['auto', 'log2'], 
+}
 
 
 # In[14]:
@@ -72,7 +82,6 @@ algs['Extra Trees Classifier'] = paramsExtraTrees
 
 df = pd.DataFrame()
 df['classifier name'] = ['KNN', 'Decision Tree', 'Naive Bayes', 'SVM', 'Gaussian Process', 'Random Forest', 'Neural Net', 'AdaBoost', 'Extra Trees Classifier']
-#df['classifier name'] = ['KNN', 'Decision Tree', 'Naive Bayes', 'SVM', 'Gaussian Process', 'Random Forest']
 
 
 # In[2]:
@@ -86,10 +95,10 @@ def gridSearch(dataset_name, X, y, num_iterations):
         models['Naive Bayes'] = GaussianNB()
         models['SVM'] = SVC(random_state=1)
         models['Gaussian Process'] = GaussianProcessClassifier(random_state=1)
-        models['Random Forest'] = RandomForestClassifier(random_state=1)
+        models['Random Forest'] = RandomForestClassifier(n_jobs=8, random_state=1)
         models['Neural Net'] = MLPClassifier(random_state=1)
         models['AdaBoost'] = AdaBoostClassifier(random_state=1) 
-        models['Extra Trees Classifier'] = ExtraTreesClassifier(random_state=1)
+        models['Extra Trees Classifier'] = ExtraTreesClassifier(n_jobs=8,random_state=1)
         run_dataset(name, X, y, models, algs) 
                       
     return df
@@ -102,28 +111,30 @@ def run_dataset(dataset_name, X, y, models, algs):
     average_accuracy = 0.0
     accuracy_list = []
     print(dataset_name)
-    # for name, model in models:
     for (name, model), (name, alg) in zip(models.items(),algs.items()):
         print(model)
-        print(alg)
-        clf = GridSearchCV(model, alg, cv=10, scoring='roc_auc')
+        #print(alg)
+        clf = GridSearchCV(model, alg, n_jobs=8, cv=10, scoring='roc_auc')
         clf.fit(X, y)
         
         # print( best accuracy and associated params
         print(clf.best_score_)
         print(clf.best_params_)
         print('\n')	
-        #best_params = clf.best_estimator_.get_params()
         clf = clf.best_estimator_ 
-        # append mean of best score
-        accuracy_list.append(cross_val_score(clf, X, y, cv=10, scoring='roc_auc').mean())
-        #accuracy_list.append(clf.best_score_)        
-
+	# take average over 5 iter
+        for i in iter_range: 
+            # append mean of best score
+            classifier = clf
+            scores = cross_val_score(classifier, X, y, cv=10, scoring='roc_auc')
+            average_accuracy+=scores.mean()
+        accuracy_list.append((average_accuracy/(5.0)))
+        average_accuracy = 0.0
+     
     se = pd.Series(accuracy_list)
     df[dataset_name] = se.values
 
 
-# In[ ]:
 
 
 

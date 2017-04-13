@@ -47,11 +47,24 @@ def parse_dataset_X(text_file_name, biom_file_name, isAmish):
     p = pd.DataFrame(b.matrix_data.T.todense().astype(int), index=b.ids(axis="sample"), columns=b.ids(axis="observation"))
     c = p.loc[i, :]
 #   print(c)
-    
+    indices = pd.isnull(c).any(1).nonzero()[0]
+    c[pd.isnull(c).any(axis=1)]
+    c = c.dropna(how='any')
+    i_2 = i_2.drop(i_2.index[indices]) 
     # return a tuple containing X and y
     return (c.fillna(0).as_matrix(), i_2.bmi_group_binned)
 
-
+def parse_newdataset(text_file_name, biom_file_name):
+    m = pd.read_csv(text_file_name, sep="\t", index_col=0)
+    b = biom.load_table(biom_file_name)
+    
+    m[['obesity']] = m[['obesity']].astype(int)
+    i = m[m.obesity != 2].index
+    i_2 = m[m.obesity !=2]
+    p = pd.DataFrame(b.matrix_data.T.todense().astype(int), index=b.ids(axis="sample"), columns=b.ids(axis="observation"))
+    c = p.loc[i, :]
+    
+    return (c.fillna(0).as_matrix(), i_2.obesity)
 # In[ ]:
 
 

@@ -1,4 +1,4 @@
-#Shweta Kinger 3/31/17
+#Shweta Kinger 4/11/17
 # coding: utf-8
 
 # In[1]:
@@ -25,7 +25,7 @@ import pandas as pd
 #import nbimporter # not sure if need to download
 #from imp import reload
 import Parsing_Dataset as parse #MAKE SURE YOU DOWNLOAD THIS FROM GIT REPO
-import Classifiers_Accuracies_Script as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
+import GridSearch_AccuraciesScript as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
 from datetime import datetime
 
 #reload(parse)
@@ -46,30 +46,35 @@ files = {
     'wu' : {},
     'amish' : {},
     'yatsunenko' : {},
-    'HMP' : {},
+    'HMP' : {},    
 } 
+newfiles = {
+    'new': {}
+}
 
 #Turnbaugh
 files['turnbaugh']['meta'] = path + "merged_bmi_mapping_final__original_study_Turnbaugh_mz_dz_twins__.txt"
-files['turnbaugh']['biom'] = path + "filtered_otu_table__original_study_Turnbaugh_mz_dz_twins__.biom"
+files['turnbaugh']['biom'] = path + "Turnbaugh.biom"
 
 #Wu dataset
 files['wu']['meta'] = path + "merged_bmi_mapping_final__original_study_COMBO_Wu__.txt"
-files['wu']['biom'] = path + "filtered_otu_table__original_study_COMBO_Wu__.biom"
+files['wu']['biom'] = path + "Wu.biom"
 
 #Amish dataset
 files['amish']['meta'] = path + "merged_bmi_mapping_final__original_study_amish_Fraser__.txt"
-files['amish']['biom'] = path + "filtered_otu_table__original_study_amish_Fraser__.biom"
+files['amish']['biom'] = path + "Amish.biom"
 
 #Yatsunenko dataset
 files['yatsunenko']['meta'] = path + "merged_bmi_mapping_final__original_study_Yatsunenko_GG__.txt"
-files['yatsunenko']['biom'] = path + "filtered_otu_table__original_study_Yatsunenko_GG__.biom"
+files['yatsunenko']['biom'] = path + "Yat.biom"
 
 #HMP dataset
 files['HMP']['meta'] = path + "merged_bmi_mapping_final__original_study_HMP__.txt"
-files['HMP']['biom'] = path + "filtered_otu_table__original_study_HMP__.biom"
+files['HMP']['biom'] = path + "HMP.biom"
 
-
+#new dataset
+newfiles['new']['meta'] = path + "metadata_newstudy.txt"
+newfiles['new']['biom'] = path + "newstudy.biom"
 
 # In[10]:
 
@@ -80,9 +85,8 @@ for study in files:
     if(study == 'amish'):
 	isAmish = True
     X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], isAmish)
-    dataframe = script.setupAndRun(study, X, y, 3)
+    dataframe = script.gridSearch(study, X, y, 2)
 	
-    
 #finished all studies
 dataframe.to_csv('accuracytable' + str(datetime.now()) + '.csv')
 
