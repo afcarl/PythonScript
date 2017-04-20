@@ -1,4 +1,6 @@
-
+#Updated script 4/18/17
+#fixed params of rf and extra trees to be same 
+#added std dev stuff
 # coding: utf-8
 
 # In[1]:
@@ -17,7 +19,8 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, ExtraTr
 from sklearn.naive_bayes import GaussianNB
 from sklearn.grid_search import GridSearchCV
 import collections
-
+from time import time
+from operator import itemgetter
 # In[5]:
 
 #Dictionaries that hold parameters 
@@ -45,7 +48,6 @@ paramsRandomForest = {
     'max_features':['sqrt', 'log2']
 }
 
-# finish parameter values
 paramsNeuralNet = {
   'hidden_layer_sizes':[(140,), (210,), (250,)],
   'solver':['lbfgs', 'adam']
@@ -56,11 +58,11 @@ paramsAdaboost = {
   'base_estimator':[DecisionTreeClassifier(), RandomForestClassifier()]
 }
 paramsExtraTrees = {
-    'n_estimators':[20,50,100,200,500,1000, 2000],
-    'max_depth':[None, 20, 50, 100],
-    'min_samples_split':[2,3,5,6,8,10,15],
-    'min_samples_leaf': [1,2,3,4,5,6,10,15],
-    'max_features':['auto', 'log2'], 
+    'n_estimators':[20,50,100,500,1000,1500,1800, 2000],
+    'max_depth':[2,3,4,5,10,100,200,1000],
+    'min_samples_split':[2,3,5,6,10,15],
+    'min_samples_leaf': [2,4,5,6,8,10,15],
+    'max_features':['sqrt', 'log2'], 
 }
 
 
@@ -115,26 +117,22 @@ def run_dataset(dataset_name, X, y, models, algs):
         print(model)
         #print(alg)
         clf = GridSearchCV(model, alg, n_jobs=8, cv=10, scoring='roc_auc')
+	#start = time()
         clf.fit(X, y)
-        
+	#print("TIME")
+        #print(start - time())
         # print( best accuracy and associated params
         print(clf.best_score_)
         print(clf.best_params_)
-        print('\n')	
-        clf = clf.best_estimator_ 
-	# take average over 5 iter
-        for i in iter_range: 
-            # append mean of best score
-            classifier = clf
-            scores = cross_val_score(classifier, X, y, cv=10, scoring='roc_auc')
-            average_accuracy+=scores.mean()
-        accuracy_list.append((average_accuracy/(5.0)))
-        average_accuracy = 0.0
-     
+        print('\n')
+	# print std. deviation
+	top_score = sorted(clf.grid_scores_, key=itemgetter(1), reverse=True)[:1]
+        for score in top_score:
+            print(np.std(score.cv_validation_scores))        
+        accuracy_list.append(clf.best_score_)	
+        #clf = clf.best_estimator_ 
     se = pd.Series(accuracy_list)
     df[dataset_name] = se.values
-
-
 
 
 
