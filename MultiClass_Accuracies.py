@@ -18,6 +18,9 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.grid_search import GridSearchCV
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import label_binarize
+from operator import itemgetter
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
 import collections
 # In[5]:
 
@@ -83,7 +86,6 @@ algs['Extra Trees Classifier'] = paramsExtraTrees
 df = pd.DataFrame()
 df['classifier name'] = ['KNN', 'Decision Tree', 'Naive Bayes', 'SVM', 'Gaussian Process', 'Random Forest', 'Neural Net', 'AdaBoost', 'Extra Trees Classifier']
 
-
 # In[2]:
 
 def gridSearch(dataset_name, X, y, num_iterations):
@@ -95,10 +97,10 @@ def gridSearch(dataset_name, X, y, num_iterations):
         models['Naive Bayes'] = OneVsRestClassifier(GaussianNB())
         models['SVM'] = OneVsRestClassifier(SVC(random_state=1))
         models['Gaussian Process'] = OneVsRestClassifier(GaussianProcessClassifier(random_state=1))
-        models['Random Forest'] = OneVsRestClassifier(RandomForestClassifier(n_jobs=8, random_state=1))
+        models['Random Forest'] = OneVsRestClassifier(RandomForestClassifier(random_state=1))
         models['Neural Net'] = OneVsRestClassifier(MLPClassifier(random_state=1))
         models['AdaBoost'] = OneVsRestClassifier(AdaBoostClassifier(random_state=1))
-        models['Extra Trees Classifier'] = OneVsRestClassifier(ExtraTreesClassifier(n_jobs=8,random_state=1))
+        models['Extra Trees Classifier'] = OneVsRestClassifier(ExtraTreesClassifier(random_state=1))
         run_dataset(name, X, y, models, algs) 
                       
     return df
@@ -113,19 +115,17 @@ def run_dataset(dataset_name, X, y, models, algs):
     print(dataset_name)
     for (name, model), (name, alg) in zip(models.items(),algs.items()):
         print(model)
-        #print(alg)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 	y = label_binarize(y, classes=[1,2,3])
-        clf = GridSearchCV(model, alg, n_jobs=8, cv=10, scoring='accuracy')
-	#start = time()
-        clf.fit(X, y)
+        clf = GridSearchCV(model, alg, cv=10)
+        clf.fit(X_train, y_train)
         # print( best accuracy and associated params
-        print(clf.best_score_)
         print(clf.best_params_)
         print('\n')
+	y_pred_class = clf.predict(X_test)
+	print("CLASSIFICATION SCORE")
+	print(metrics.accuracy_score(y_test, y_pred_class))
 	# print std. deviation
-	top_score = sorted(clf.grid_scores_, key=itemgetter(1), reverse=True)[:1]
-        for score in top_score:
-            print(np.std(score.cv_validation_scores))        
         accuracy_list.append(clf.best_score_)	
         #clf = clf.best_estimator_ 
     se = pd.Series(accuracy_list)
