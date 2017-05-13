@@ -26,14 +26,14 @@ import collections
 
 #Dictionaries that hold parameters 
 paramsKNN = {
-    'estimator__n_neighbors':[2,5,10]
+    'n_neighbors':[2,5,10]
 }
 paramsDecisionTrees = {
-    'estimator__criterion':['gini', 'entropy'],
-    'estimator__max_depth':[5,10,20],
-    'estimator__min_samples_split': [2,5,10,15],
-    'estimator__min_samples_leaf':[5,10,15],
-    'estimator__max_features':['sqrt'],   
+    'criterion':['gini', 'entropy'],
+    'max_depth':[5,10,20],
+    'min_samples_split': [2,5,10,15],
+    'min_samples_leaf':[5,10,15],
+    'max_features':['sqrt'],   
 }
 paramsNB = {}
 paramsSVM = {
@@ -42,16 +42,16 @@ paramsSVM = {
 }
 paramsGaussian = {}
 paramsRandomForest = {
-    'estimator__n_estimators': [100, 500, 1000,2000],
-    'estimator__max_depth':[3,5,10,100],
-    'estimator__min_samples_split':[5,10,15],
-    'estimator__min_samples_leaf':[5,10,15],
-    'estimator__max_features':['sqrt', 'log2']
+    'n_estimators': [100, 500, 1000,2000],
+    'max_depth':[3,5,10,100],
+    'min_samples_split':[5,10,15],
+    'min_samples_leaf':[5,10,15],
+    'max_features':['sqrt', 'log2']
 }
 
 paramsNeuralNet = {
-  'estimator__hidden_layer_sizes':[(140,), (210,)],
-  'estimator__solver':['lbfgs', 'adam']
+  'hidden_layer_sizes':[(140,), (210,)],
+  'solver':['lbfgs', 'adam']
 }
 paramsAdaboost = {
   'estimator__learning_rate': [1],
@@ -59,11 +59,11 @@ paramsAdaboost = {
   'estimator__base_estimator':[DecisionTreeClassifier(), RandomForestClassifier()]
 }
 paramsExtraTrees = {
-    'estimator__n_estimators':[100,500,1000,2000],
-    'estimator__max_depth':[4,10,100],
-    'estimator__min_samples_split':[2,5,10,15],
-    'estimator__min_samples_leaf': [2,5,10,15],
-    'estimator__max_features':['sqrt', 'log2'], 
+    'n_estimators':[100,500,1000,2000],
+    'max_depth':[4,10,100],
+    'min_samples_split':[2,5,10,15],
+    'min_samples_leaf': [2,5,10,15],
+    'max_features':['sqrt', 'log2'], 
 }
 
 
