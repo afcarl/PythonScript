@@ -92,15 +92,15 @@ def gridSearch(dataset_name, X, y, num_iterations):
     models = collections.OrderedDict() 
     for i in range(1, num_iterations):
         name = dataset_name + str(i)
-        models['KNN'] = OneVsRestClassifier(KNeighborsClassifier())
-        models['Decision Tree'] = OneVsRestClassifier(DecisionTreeClassifier(random_state=1))
+        models['KNN'] = KNeighborsClassifier()
+        models['Decision Tree'] = DecisionTreeClassifier(random_state=1)
         models['Naive Bayes'] = OneVsRestClassifier(GaussianNB())
-        models['SVM'] = OneVsRestClassifier(SVC(random_state=1))
+        models['SVM'] = OneVsRestClassifier(SVC(random_state=1)) 
         models['Gaussian Process'] = OneVsRestClassifier(GaussianProcessClassifier(random_state=1))
-        models['Random Forest'] = OneVsRestClassifier(RandomForestClassifier(random_state=1))
-        models['Neural Net'] = OneVsRestClassifier(MLPClassifier(random_state=1))
+        models['Random Forest'] = RandomForestClassifier(random_state=1)
+        models['Neural Net'] = MLPClassifier(random_state=1)
         models['AdaBoost'] = OneVsRestClassifier(AdaBoostClassifier(random_state=1))
-        models['Extra Trees Classifier'] = OneVsRestClassifier(ExtraTreesClassifier(random_state=1))
+        models['Extra Trees Classifier'] = ExtraTreesClassifier(random_state=1)
         run_dataset(name, X, y, models, algs) 
                       
     return df
