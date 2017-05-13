@@ -83,7 +83,7 @@ newfiles['new']['biom'] = path + "newstudy.biom"
     #isAmish = False
     #if(study == 'amish'):
 	#isAmish = True
-X, y = parse.parse_newdataset(files['HMP']['meta'], files['HMP']['biom'])
+X, y = parse.parse_dataset_X(files['HMP']['meta'], files['HMP']['biom'], False)
 dataframe = script.gridSearch('HMP', X, y, 2)
 	
 #finished all studies
