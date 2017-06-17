@@ -87,7 +87,7 @@ df = pd.DataFrame()
 df['classifier name'] = ['KNN', 'Decision Tree', 'Naive Bayes', 'SVM', 'Gaussian Process', 'Random Forest', 'Neural Net', 'AdaBoost', 'Extra Trees Classifier']
 
 # In[2]:
-
+# Sets up models with specified algorithms and parameters to run Multiclass classification
 def gridSearch(dataset_name, X, y, num_iterations):
     models = collections.OrderedDict() 
     for i in range(1, num_iterations):
@@ -107,7 +107,7 @@ def gridSearch(dataset_name, X, y, num_iterations):
 
 
 # In[10]:
-
+# Runs datasets and classifies each sample as obese, lean, overweight
 def run_dataset(dataset_name, X, y, models, algs):
     iter_range = range(1,6)
     average_accuracy = 0.0
@@ -115,6 +115,7 @@ def run_dataset(dataset_name, X, y, models, algs):
     print(dataset_name)
     for (name, model), (name, alg) in zip(models.items(),algs.items()):
         print(model)
+	#splits data 50/50
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
 	y = label_binarize(y, classes=[1,2,3])
         clf = GridSearchCV(model, alg, cv=10)

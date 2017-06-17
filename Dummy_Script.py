@@ -1,12 +1,8 @@
 # coding: utf-8
 
 # In[1]:
-
+# This file runs the Dummy Classifier on specified datasets.
 # TO BE USED IN BARNACLE
-
-# This is the main script that runs the multiclass classification on
-# specified datasets.
-
 # In[3]:
 
 #import statements
@@ -15,8 +11,8 @@ import sklearn
 import pandas as pd
 #import nbimporter # not sure if need to download
 #from imp import reload
-import Parsing_Dataset_3way as parse #MAKE SURE YOU DOWNLOAD THIS FROM GIT REPO
-import MultiClass_Accuracies as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
+import Parsing_Dataset as parse #MAKE SURE YOU DOWNLOAD THIS FROM GIT REPO
+import Dummy_AccuraciesScript as script #MAKE SURE YOU DOWNLOAD THIS GIT REPO
 from datetime import datetime
 
 #reload(parse)
@@ -71,17 +67,15 @@ newfiles['new']['biom'] = path + "newstudy.biom"
 
 #run on each study
 
-#for study in files:
-    #isAmish = False
-    #if(study == 'amish'):
-	#isAmish = True
-X, y = parse.parse_dataset_X(files['HMP']['meta'], files['HMP']['biom'], False)
-dataframe = script.gridSearch('HMP', X, y, 2)
+for study in files:
+    isAmish = False
+    if(study == 'amish'):
+	isAmish = True
+    X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], isAmish)
+    script.runClassifier(study, X, y)
 	
 #finished all studies
-dataframe.to_csv('accuracytable' + str(datetime.now()) + '.csv')
+#dataframe.to_csv('accuracytable' + str(datetime.now()) + '.csv')
 
-# In[8]:
 
-# %timeit list(reversed(range(1,1000)))
 
