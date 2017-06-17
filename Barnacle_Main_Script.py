@@ -59,7 +59,7 @@ for study in files:
     #the Amish study needs additional preprocessing
     isAmish = False
     if(study == 'amish'):
-	isAmish = True
+        isAmish = True
 
     X, y = parse.parse_dataset_X(files[study]['meta'], files[study]['biom'], isAmish)
     dataframe = script.gridSearch(study, X, y, 2)
