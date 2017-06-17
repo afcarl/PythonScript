@@ -54,6 +54,7 @@ def parse_dataset_X(text_file_name, biom_file_name, isAmish):
     # return a tuple containing X and y
     return (c.fillna(0).as_matrix(), i_2.bmi_group_binned)
 
+#Parses new data set (newstudy.biom) not in original study
 def parse_newdataset(text_file_name, biom_file_name):
     m = pd.read_csv(text_file_name, sep="\t", index_col=0)
     b = biom.load_table(biom_file_name)

@@ -3,7 +3,8 @@
 
 # In[8]:
 
-# This file contains a definition called parse_dataset_X that parses the files for only the lean/obese samples.
+# This file contains a definition called parse_dataset_X that parses the files for the lean,obese,
+# overweight samples.
 
 # Method params: the metadata file name and the biom file name
 
@@ -35,7 +36,6 @@ def parse_dataset_X(text_file_name, biom_file_name, isAmish):
         m['help'] = m['#SampleID'].apply(str)
         m.set_index('help', inplace=True)
     
-    #parse for only lean and obese samples (omit overweight)
     i = m.index
 
     # create dataframe
