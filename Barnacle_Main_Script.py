@@ -1,7 +1,7 @@
 # For use in Barnacle
 
 # To use this function, call the function that loops through classifiers and creates table in other ntbk
-#In order to run this file, you must also download Parsing_Dataset and CLassifiers_Accuracies_Script (from git repo)
+#In order to run this file, you must also download Parsing_Dataset and GridSearch_AccuraciesScript (from git repo)
 
 #import statements
 import biom
