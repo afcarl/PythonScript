@@ -22,7 +22,8 @@ import collections
 from time import time
 from operator import itemgetter
 # In[5]:
-
+# Each dictionary has parameters for the specified
+# machine learning algorithm
 #Dictionaries that hold parameters 
 paramsKNN = {
     'n_neighbors':[2,5,10]
@@ -87,7 +88,7 @@ df['classifier name'] = ['KNN', 'Decision Tree', 'Naive Bayes', 'SVM', 'Gaussian
 
 
 # In[2]:
-
+# This function sets up the models with the corresponding classifiers.
 def gridSearch(dataset_name, X, y, num_iterations):
     models = collections.OrderedDict() 
     for i in range(1, num_iterations):
@@ -107,7 +108,8 @@ def gridSearch(dataset_name, X, y, num_iterations):
 
 
 # In[10]:
-
+# This function runs each dataset on all 9 algorithms, and appends the 
+# ROC_AUC score to a table in a CSV file
 def run_dataset(dataset_name, X, y, models, algs):
     iter_range = range(1,6)
     average_accuracy = 0.0
@@ -119,8 +121,6 @@ def run_dataset(dataset_name, X, y, models, algs):
         clf = GridSearchCV(model, alg, n_jobs=8, cv=10, scoring='roc_auc')
 	#start = time()
         clf.fit(X, y)
-	#print("TIME")
-        #print(start - time())
         # print( best accuracy and associated params
         print(clf.best_score_)
         print(clf.best_params_)
